@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Item Details - EasyFood</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+          crossorigin="anonymous"></script>
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar bg-body-tertiary shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="home.html">
+      <img src="media/easyfood.png" alt="Logo" height="40" class="d-inline-block align-text-top">
+    </a>
+
+    <span class="fw-semibold fs-5 mx-auto">Item Details</span>
+
+    <div class="d-flex align-items-center gap-2">
+      <!-- Cart -->
+      <a href="cart.html" class="btn btn-outline-secondary rounded-circle p-2 position-relative">
+        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png"
+             alt="Cart" width="22" height="22">
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                    2
+                </span>
+      </a>
+      <!-- Profile -->
+      <a href="profile.html" class="btn btn-outline-secondary rounded-circle p-2">
+        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+             alt="Profile" width="22" height="22">
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Item Details -->
+<div class="container my-5">
+  <div class="row g-4">
+    <!-- Image -->
+    <div class="col-md-5 text-center">
+      <img src="media/pizza.png"
+           class="w-100 rounded shadow-sm"
+           alt="Pepperoni Pizza"
+           style="max-height:400px; object-fit:cover;">
+    </div>
+
+    <!-- Info -->
+    <div class="col-md-7 d-flex flex-column justify-content-between">
+      <div>
+        <h2 class="fw-bold">Pepperoni Pizza</h2>
+        <p class="text-muted fs-5 fw-semibold">$15.49</p>
+        <p class="text-secondary">
+          A classic Pepperoni Pizza made with fresh mozzarella, tangy tomato sauce,
+          and crispy pepperoni slices. Perfectly baked for a delicious meal.
+        </p>
+      </div>
+
+      <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
+        <button class="btn btn-warning btn-lg fw-semibold flex-fill">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommended Section -->
+  <div class="mt-5">
+    <h4 class="mb-3">You may also like</h4>
+    <div class="row g-3">
+      <!-- Item Card -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="media/burger.png" class="card-img-top object-fit-cover" style="height:200px;" alt="Burger">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Cheese Burger</h5>
+            <p class="card-text text-muted">$12.99</p>
+            <a href="item.html" class="btn btn-sm btn-warning mt-auto">View Details</a>
+          </div>
+        </div>
+      </div>
+      <!-- Item Card -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="media/salad.png" class="card-img-top object-fit-cover" style="height:200px;" alt="Salad">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Fresh Salad</h5>
+            <p class="card-text text-muted">$9.49</p>
+            <a href="item.html" class="btn btn-sm btn-warning mt-auto">View Details</a>
+          </div>
+        </div>
+      </div>
+      <!-- Item Card -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="media/sandwich.png" class="card-img-top object-fit-cover" style="height:200px;" alt="Sandwich">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Club Sandwich</h5>
+            <p class="card-text text-muted">$8.99</p>
+            <a href="item.html" class="btn btn-sm btn-warning mt-auto">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

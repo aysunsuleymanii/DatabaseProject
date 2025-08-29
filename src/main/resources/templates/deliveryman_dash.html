@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delivery Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar bg-body-tertiary shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">Delivery Dashboard</a>
+    <a href="profile.html" class="btn btn-outline-secondary rounded-circle p-2">
+      <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile" width="22" height="22">
+    </a>
+  </div>
+</nav>
+
+<div class="container my-4">
+
+  <!-- Available Deliveries -->
+  <h3 class="fw-bold mb-3">Available Deliveries</h3>
+  <div class="card shadow-sm border-0 mb-3">
+    <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+      <div>
+        <h5 class="mb-1">Order #205</h5>
+        <p class="text-muted mb-1">Pickup: Pizza Palace</p>
+        <p class="text-muted mb-1">Drop-off: 123 Main St.</p>
+        <p class="fw-semibold text-dark mb-0">Payment: $12.00</p>
+      </div>
+      <div class="mt-3 mt-md-0">
+        <button class="btn btn-success">Accept</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Delivery (after accepted) -->
+  <h3 class="fw-bold mb-3 mt-4">Active Delivery</h3>
+  <div class="card shadow-sm border-0 mb-3">
+    <div class="card-body">
+      <h5 class="mb-2">Order #204</h5>
+      <p class="text-muted mb-1">Pickup: Sushi House</p>
+      <p class="text-muted mb-1">Drop-off: 45 Park Avenue</p>
+
+      <!-- Embedded Map -->
+      <div class="ratio ratio-16x9 my-3">
+        <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.742383132246!2d-74.006015!3d40.712776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDAnMjEuNyJX!5e0!3m2!1sen!2sus!4v1632357890123!5m2!1sen!2sus"
+                style="border:0;" allowfullscreen="" loading="lazy">
+        </iframe>
+      </div>
+
+      <!-- Update Status -->
+      <div class="text-end">
+        <button class="btn btn-primary">Mark as Delivered</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
