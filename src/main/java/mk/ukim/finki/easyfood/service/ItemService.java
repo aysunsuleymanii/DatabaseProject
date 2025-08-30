@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface ItemService {
     List<Item> findAll();
     List<Item> findRecommendedItems();
-    List<Item> findItemsByRestaurantId(Long restaurantId);
+   // List<Item> findItemsByRestaurantId(Long restaurantId);
+    public List<Item> getItemsByMenuId(Long menuId);
 }

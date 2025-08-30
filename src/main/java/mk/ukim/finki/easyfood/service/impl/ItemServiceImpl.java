@@ -40,15 +40,26 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll().stream().limit(5).collect(Collectors.toList());
     }
 
-    @Override
-    public List<Item> findItemsByRestaurantId(Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+//    @Override
+//    public List<Item> findItemsByRestaurantId(Long restaurantId) {
+//        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+//                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+//
+//        Menu menu = menuRepository.findByRestaurant(restaurant);
+//        if (menu == null) return List.of();
+//
+//        List<MenuItem> menuItems = menuItemRepository.findByMenu(menu);
+//        return menuItems.stream()
+//                .map(MenuItem::getItem)
+//                .collect(Collectors.toList());
+//    }
 
-        Menu menu = menuRepository.findByRestaurant(restaurant);
-        if (menu == null) return List.of();
+    public List<Item> getItemsByMenuId(Long menuId) {
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new RuntimeException("Menu not found"));
 
         List<MenuItem> menuItems = menuItemRepository.findByMenu(menu);
+
         return menuItems.stream()
                 .map(MenuItem::getItem)
                 .collect(Collectors.toList());
