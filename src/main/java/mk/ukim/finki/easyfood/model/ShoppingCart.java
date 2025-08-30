@@ -11,9 +11,8 @@ public class ShoppingCart {
     @Column(name = "cart_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user;
+    @OneToOne
+    @JoinColumn(name = "customer_id") // foreign key column
+    private Customer customer;
 
-    // getters and setters
 }
