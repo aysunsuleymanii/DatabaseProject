@@ -2,11 +2,17 @@ package mk.ukim.finki.easyfood.model;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "menu_item")
 @IdClass(MenuItemId.class)
-public class MenuItem {
+public class MenuItem implements Serializable {
 
     @Id
     @ManyToOne
@@ -18,6 +24,7 @@ public class MenuItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    // getters and setters
+    public Item getItem() {
+        return item;
+    }
 }
-

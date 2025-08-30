@@ -1,11 +1,17 @@
 package mk.ukim.finki.easyfood.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import mk.ukim.finki.easyfood.model.enumerations.ROLE;
+
 import java.util.List;
 
 @Entity
 @Table(name = "app_user")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Data
+@NoArgsConstructor
 public class AppUser {
 
     @Id
@@ -28,6 +34,9 @@ public class AppUser {
     @Column(name = "phone", length = 50)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    private ROLE role;
+
     @ManyToMany
     @JoinTable(
             name = "user_addresses",
@@ -36,5 +45,16 @@ public class AppUser {
     )
     private List<Address> addresses;
 
-    // getters and setters
+
+    public AppUser(String email, String password, String firstName, String lastName, String phone, ROLE role) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.role = role;
+    }
+
+
+
 }

@@ -1,10 +1,13 @@
 package mk.ukim.finki.easyfood.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "menu")
+@Data
 public class Menu {
 
     @Id
