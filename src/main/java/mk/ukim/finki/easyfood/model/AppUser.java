@@ -11,8 +11,9 @@ import java.util.List;
 @Table(name = "app_user")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
-@NoArgsConstructor
 public class AppUser {
+    protected AppUser() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
