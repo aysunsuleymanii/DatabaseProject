@@ -24,9 +24,9 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAll();
     }
     @Override
-    public List<Order> listOrdersByDeliveryMan(Long deliveryMan) {
+    public List<Order> listOrdersByDeliveryManAndOrderStatus(Long deliveryMan, String orderStatus) {
         DeliveryMan deliveryMan1 = deliveryManRepository.findById(deliveryMan).orElse(null);
-        return orderRepository.findAllByDeliveryMan(deliveryMan1);
+        return orderRepository.findAllByDeliveryManAndOrderStatus(deliveryMan1, orderStatus);
     }
 
 }

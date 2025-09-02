@@ -61,8 +61,8 @@ public class Order {
         this.address = address;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public String getRestaurantName() {
+        return restaurant.getName();
     }
 
     public void setRestaurant(Restaurant restaurant) {

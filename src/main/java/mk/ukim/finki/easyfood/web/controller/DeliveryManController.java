@@ -25,10 +25,10 @@ public class DeliveryManController {
     @GetMapping("/{id}")
     public String deliveryManShow(@PathVariable Long id, Model model) {
 
-        List<Order> orders = orderService.listOrdersByDeliveryMan(id);
-        List<Order> orders1 = orderService.listAllOrders();
-        model.addAttribute("orders", orders);
-        model.addAttribute("o", orders1);
+        List<Order> pendingOrders = orderService.listOrdersByDeliveryManAndOrderStatus(id, "Pending");
+        List<Order> processingOrders = orderService.listOrdersByDeliveryManAndOrderStatus(id, "Processing");
+        model.addAttribute("pendingOrders", pendingOrders);
+        model.addAttribute("processingOrders", processingOrders);
 
         return "deliveryman_dash";
     }
