@@ -12,9 +12,9 @@ import java.util.List;
 @Table(name = "customer")
 @PrimaryKeyJoinColumn(name = "user_id")
 @Data
-@NoArgsConstructor
 public class Customer extends AppUser {
-
+    protected Customer() {
+    }
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;

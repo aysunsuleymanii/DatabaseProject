@@ -9,8 +9,11 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "administrator")
 @PrimaryKeyJoinColumn(name = "user_id")
-@NoArgsConstructor
 public class Administrator extends AppUser {
+
+    protected Administrator() {
+        super();
+    }
 
     @Column(name = "authorized_from")
     private LocalDate authorizedFrom;

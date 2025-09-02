@@ -28,4 +28,12 @@ public class Address {
     private List<AppUser> users;
 
     // getters and setters
+
+    @Override
+    public String toString() {
+        return  city +
+                ", " + street +
+                ", " + postalCode;
+    }
+
 }

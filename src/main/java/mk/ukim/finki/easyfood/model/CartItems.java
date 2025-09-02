@@ -21,4 +21,12 @@ public class CartItems {
     private Integer quantity;
 
     // getters and setters
+
+    public Item getItem() {
+        return item;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
 }
