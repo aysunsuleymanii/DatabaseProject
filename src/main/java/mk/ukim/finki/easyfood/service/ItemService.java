@@ -16,4 +16,6 @@ public interface ItemService {
     public List<Item> getItemsByMenuId(Long menuId);
 
     Item findById(Long itemId);
+
+    List<Item> searchItems(String searchTerm);
 }

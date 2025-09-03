@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -29,15 +30,26 @@ public class HomeController {
     }
 
 
-    @GetMapping()
-    public String getHomePage(Model model, Authentication authentication) {
+    @GetMapping
+    public String getHomePage(Model model,
+                              Authentication authentication,
+                              @RequestParam(required = false) String searchTerm) {
         List<Category> categories = categoryService.listCategories();
-        List<Item> items = itemService.findAll();
+        List<Item> items;
+
+        // If a search term is present, show search results; otherwise, show all items
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            items = itemService.searchItems(searchTerm);
+            model.addAttribute("searchTerm", searchTerm);
+        } else {
+            items = itemService.findAll();
+        }
+
         List<Item> recommendedItems = itemService.findRecommendedItems();
+
         model.addAttribute("categories", categories);
         model.addAttribute("items", items);
         model.addAttribute("recommendedItems", recommendedItems);
-
 
         Long userId = null;
         if (authentication != null && authentication.getPrincipal() instanceof Customer) {

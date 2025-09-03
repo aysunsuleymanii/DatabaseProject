@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>EasyFood</title>
@@ -53,15 +53,10 @@
             scrollbar-color: #f0ad4e #f1f1f1;
         }
 
-        .recommended-scroll {
-            display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-            scroll-behavior: smooth;
-        }
-
-        .recommended-scroll .card {
+        /* This CSS is for the items-container now */
+        .items-container .card,
+        .recommended-scroll .card,
+        .recommended-scroll-items .card {
             flex: 0 0 auto;
             width: 14rem;
             border-radius: 12px;
@@ -69,11 +64,15 @@
             transition: transform 0.2s;
         }
 
-        .recommended-scroll .card:hover {
+        .items-container .card:hover,
+        .recommended-scroll .card:hover,
+        .recommended-scroll-items .card:hover {
             transform: scale(1.05);
         }
 
-        .recommended-scroll img {
+        .items-container img,
+        .recommended-scroll img,
+        .recommended-scroll-items img {
             height: 140px;
             object-fit: cover;
             border-top-left-radius: 12px;
@@ -101,50 +100,32 @@
             display: none !important;
         }
 
-        .recommended-scroll-items {
+        .recommended-scroll-items,
+        .recommended-scroll,
+        .items-scroll {
             display: flex;
             gap: 1rem;
             overflow-x: auto;
             padding-bottom: 1rem;
             scroll-behavior: smooth;
         }
-
-        .recommended-scroll-items .card {
-            flex: 0 0 auto;
-            width: 14rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .recommended-scroll-items .card:hover {
-            transform: scale(1.05);
-        }
-
-        .recommended-scroll-items img {
-            height: 140px;
-            object-fit: cover;
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
-        }
     </style>
 </head>
 <body class="bg-light">
 
-<!-- Navbar -->
 <nav class="navbar bg-body-tertiary shadow-sm">
     <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
             <img src="/images/logo.JPG" alt="Logo" height="90" class="d-inline-block align-text-top">
         </a>
-        <form class="d-flex mx-auto w-50" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search for food..." aria-label="Search">
+        <form th:action="@{/home}" method="get" class="d-flex mx-auto w-50" role="search">
+            <input class="form-control me-2" type="search" name="searchTerm" th:value="${searchTerm}"
+                   placeholder="Search for food..." aria-label="Search">
             <button class="btn btn-warning" type="submit">Search</button>
         </form>
         <div class="d-flex align-items-center gap-2">
             <a href="cart.html" class="btn btn-outline-secondary rounded-circle p-2 position-relative">
                 <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart" width="22" height="22">
-                <!-- Fixed cart badge with proper conditional display -->
                 <span class="cart-badge bg-warning text-dark"
                       th:classappend="${numberOfItems == 0} ? 'd-none' : ''"
                       th:text="${numberOfItems}">0</span>
@@ -156,33 +137,38 @@
     </div>
 </nav>
 
-<!-- Quote -->
 <div class="text-center my-3">
     <blockquote class="blockquote">
         <p class="fs-5">"Fresh flavors delivered to your door."</p>
     </blockquote>
 </div>
 
-<!-- Cuisine Section (Dynamic Categories) -->
 <div id="cuisine" class="container-fluid">
     <div th:each="category : ${categories}" class="card bg-warning d-flex justify-content-center align-items-center">
         <h6 class="mb-0" th:text="${category.name}">Category Name</h6>
     </div>
 </div>
 
-<div id="Recommended" class="container-fluid my-4">
-    <h4 class="mb-3">Featured Items</h4>
-    <div class="recommended-scroll">
-        <div class="card" th:each="item : ${items}">
-            <img th:src="@{'/images/media/' + ${item.imageUrl}}" class="card-img-top" th:alt="${item.name}">
-            <div class="card-body">
-                <h5 class="card-title" th:text="${item.name}">Item Name</h5>
-                <p class="card-text text-muted" th:text="${item.price} + '$'">Price</p>
+<div class="container-fluid my-4">
+    <div class="items-container">
+        <h4 th:if="${searchTerm} != null">Search Results for: <span th:text="${searchTerm}"></span></h4>
+        <h4 th:unless="${searchTerm} != null">Featured Items</h4>
 
-                <form th:action="@{/cart/add}" method="post">
-                    <input type="hidden" name="itemId" th:value="${item.id}"/>
-                    <button type="submit" class="btn btn-warning w-100">Add to cart</button>
-                </form>
+        <div class="recommended-scroll">
+            <div class="card" th:each="item : ${items}">
+                <img th:src="@{'/images/media/' + ${item.imageUrl}}" class="card-img-top" th:alt="${item.name}">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${item.name}">Item Name</h5>
+                    <p class="card-text text-muted" th:text="${item.price} + '$'">Price</p>
+
+                    <form th:action="@{/cart/add}" method="post">
+                        <input type="hidden" name="itemId" th:value="${item.id}"/>
+                        <button type="submit" class="btn btn-warning w-100">Add to cart</button>
+                    </form>
+                </div>
+            </div>
+            <div th:if="${items.isEmpty()}">
+                <p>No results found.</p>
             </div>
         </div>
     </div>
