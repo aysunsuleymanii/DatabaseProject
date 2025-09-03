@@ -43,6 +43,21 @@ public class Order {
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<OrderItems> orderItems;
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public List<OrderItems> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItems> orderItems) {
+        this.orderItems = orderItems;
+    }
+
     // getters and setters
 
     public Long getId() {

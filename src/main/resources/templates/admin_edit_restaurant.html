@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Restaurant - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/admin">
+            <i class="fas fa-utensils me-2"></i>EasyFood Admin
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/admin/restaurants">
+                <i class="fas fa-arrow-left me-1"></i>Back to Restaurants
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-store me-2"></i>Edit Restaurant
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admin/restaurants/update}" method="post">
+                        <input type="hidden" name="id" th:value="${restaurant.id}">
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Restaurant Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                   th:value="${restaurant.name}" required
+                                   placeholder="Enter restaurant name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Website</label>
+                            <textarea class="form-control" id="address" name="address"
+                                      rows="2" th:text="${restaurant.websiteUrl}"
+                                      placeholder="Enter restaurant website"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
+                                   th:value="${restaurant.phoneNumber}"
+                                   placeholder="Enter phone number">
+                            <div class="form-text">Format: 02-123-456 or 070-123-456</div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> Changes to restaurant information will be visible to all customers.
+                            Make sure all details are accurate.
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Update Restaurant
+                            </button>
+                            <a href="/admin/restaurants" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">

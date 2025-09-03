@@ -143,10 +143,16 @@
     </blockquote>
 </div>
 
-<div id="cuisine" class="container-fluid">
-    <div th:each="category : ${categories}" class="card bg-warning d-flex justify-content-center align-items-center">
+<div id="cuisine" class="container-fluid" th:if="${categories != null}">
+    <a th:each="category : ${categories}"
+       th:href="@{/home(categoryId=${category.id})}"
+       class="card bg-warning d-flex justify-content-center align-items-center text-decoration-none text-dark">
         <h6 class="mb-0" th:text="${category.name}">Category Name</h6>
-    </div>
+    </a>
+</div>
+
+<div th:if="${categories == null}">
+    <p>No categories available.</p>
 </div>
 
 <div class="container-fluid my-4">

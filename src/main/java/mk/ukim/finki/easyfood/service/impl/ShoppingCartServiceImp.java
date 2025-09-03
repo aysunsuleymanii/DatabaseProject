@@ -155,7 +155,6 @@ public class ShoppingCartServiceImp implements ShoppingCartService {
 
     @Override
     public ShoppingCart getActiveShoppingCart(Long userId) {
-        // Find by customer ID instead of customer ID and active flag
         Optional<Customer> customer = customerRepository.findById(userId);
         if (customer.isPresent()) {
             return shoppingCartRepository.findByCustomer(customer.get())
@@ -174,7 +173,6 @@ public class ShoppingCartServiceImp implements ShoppingCartService {
 
             if (cartOpt.isPresent()) {
                 ShoppingCart cart = cartOpt.get();
-                // Delete all cart items first
                 if (cart.getCartItems() != null) {
                     cartItemsRepository.deleteAll(cart.getCartItems());
                     cart.getCartItems().clear();
@@ -189,7 +187,6 @@ public class ShoppingCartServiceImp implements ShoppingCartService {
     public void deleteShoppingCart(Long userId) {
         ShoppingCart cart = getActiveShoppingCart(userId);
         if (cart != null) {
-            // Delete all cart items first
             if (cart.getCartItems() != null) {
                 cartItemsRepository.deleteAll(cart.getCartItems());
             }
