@@ -7,9 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     List<MenuItem> findByMenu(Menu menu);
+
     List<MenuItem> findByItem(Item item);
+
+    Optional<MenuItem> findFirstByItem(Item item);
 }

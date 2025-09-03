@@ -41,4 +41,8 @@ public class CartItems {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public ShoppingCart getCart() {
+        return cart;
+    }
 }

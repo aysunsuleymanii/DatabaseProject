@@ -152,4 +152,53 @@ public class ShoppingCartServiceImp implements ShoppingCartService {
                 .mapToInt(CartItems::getQuantity)
                 .sum();
     }
+
+    @Override
+    public ShoppingCart getActiveShoppingCart(Long userId) {
+        // Find by customer ID instead of customer ID and active flag
+        Optional<Customer> customer = customerRepository.findById(userId);
+        if (customer.isPresent()) {
+            return shoppingCartRepository.findByCustomer(customer.get())
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public void clearCart(Long customerId) {
+        Optional<Customer> customerOpt = customerRepository.findById(customerId);
+        if (customerOpt.isPresent()) {
+            Customer customer = customerOpt.get();
+            Optional<ShoppingCart> cartOpt = shoppingCartRepository.findByCustomer(customer);
+
+            if (cartOpt.isPresent()) {
+                ShoppingCart cart = cartOpt.get();
+                // Delete all cart items first
+                if (cart.getCartItems() != null) {
+                    cartItemsRepository.deleteAll(cart.getCartItems());
+                    cart.getCartItems().clear();
+                    shoppingCartRepository.save(cart);
+                }
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteShoppingCart(Long userId) {
+        ShoppingCart cart = getActiveShoppingCart(userId);
+        if (cart != null) {
+            // Delete all cart items first
+            if (cart.getCartItems() != null) {
+                cartItemsRepository.deleteAll(cart.getCartItems());
+            }
+            shoppingCartRepository.delete(cart);
+        }
+    }
+
+    @Override
+    public List<CartItems> getCartItems(Long customerId) {
+        return getItemsInCartByCustomerId(customerId);
+    }
 }

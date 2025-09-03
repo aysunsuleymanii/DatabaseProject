@@ -20,4 +20,6 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long
                 .filter(cart -> cart.getCustomer().getId().equals(customerId))
                 .findFirst();
     }
+
+
 }

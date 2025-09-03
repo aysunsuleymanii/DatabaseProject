@@ -67,8 +67,7 @@
                 <h5>Total: <span class="text-warning"
                                  th:text="${#numbers.formatDecimal(total, 0, 'POINT', 2, 'COMMA')} + '$'">43.97$</span>
                 </h5>
-                <a href="checkout.html" class="btn btn-warning fw-semibold">Proceed to Checkout</a>
-            </div>
+                <a th:href="@{/order/checkout}" class="btn btn-warning fw-semibold">Proceed to Checkout</a></div>
         </div>
     </div>
 
