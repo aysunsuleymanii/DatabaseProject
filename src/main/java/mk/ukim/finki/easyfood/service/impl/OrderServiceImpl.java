@@ -40,9 +40,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAllByUserId(Long id) {
-        return this.orderRepository.findAllById(id);
+        return this.orderRepository.findByCustomerIdOrderByOrderDateDesc(id);
     }
-
 
     public void saveOrderItem(OrderItems orderItem) {
         orderItemsRepository.save(orderItem);

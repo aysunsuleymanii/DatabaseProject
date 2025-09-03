@@ -201,6 +201,24 @@
         </div>
     </div>
 
+    <!--    <div id="orders" class="card my-4 border-0 shadow">-->
+    <!--        <div class="card-header">-->
+    <!--            <h2 class="h4 mb-0">My Orders</h2>-->
+    <!--        </div>-->
+    <!--        <div class="card-body">-->
+    <!--            <div th:if="${not #lists.isEmpty(orders)}">-->
+    <!--                <ul class="list-group list-group-flush">-->
+    <!--                    <li class="list-group-item" th:each="order : ${orders}">-->
+    <!--                        <p class="mb-1"><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>-->
+    <!--                        <p class="mb-0"><strong>Order Date:</strong> <span th:text="${order.getOrderDate()}"></span></p>-->
+    <!--                    </li>-->
+    <!--                </ul>-->
+    <!--            </div>-->
+    <!--            <div th:unless="${not #lists.isEmpty(orders)}">-->
+    <!--                <p class="text-muted text-center py-3">You have no past orders.</p>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
     <div id="orders" class="card my-4 border-0 shadow">
         <div class="card-header">
             <h2 class="h4 mb-0">My Orders</h2>
@@ -209,8 +227,20 @@
             <div th:if="${not #lists.isEmpty(orders)}">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item" th:each="order : ${orders}">
-                        <p class="mb-1"><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
-                        <p class="mb-0"><strong>Order Date:</strong> <span th:text="${order.getOrderDate()}"></span></p>
+                        <p class="mb-1">
+                            <strong>Order ID:</strong> <span th:text="${order.id}"></span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>Order Date:</strong> <span
+                                th:text="${order.orderDate}"></span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>Order Total:</strong> <span
+                                th:text="${order.getTotalAmount()}"></span>
+                        </p>
+                        <p class="mb-0">
+                            <strong>Restaurant:</strong> <span th:text="${order.getRestaurantName()}"></span>
+                        </p>
                     </li>
                 </ul>
             </div>
