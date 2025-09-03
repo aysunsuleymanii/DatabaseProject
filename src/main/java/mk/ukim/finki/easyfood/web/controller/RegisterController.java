@@ -21,8 +21,11 @@ public class RegisterController {
     }
 
     @GetMapping
-    public String getRegisterPage() {
-        return "registe_customer";
+    public String getRegisterPage(@RequestParam(value = "error", required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
+        return "register_customer";
     }
 
     @PostMapping
@@ -33,12 +36,10 @@ public class RegisterController {
                            @RequestParam String repeatedPassword) {
         try {
             this.userService.register(fullName, email, phoneNumber, password, repeatedPassword);
-            return "redirect:/home";
+            return "redirect:/login?registered";
         } catch (RuntimeException ex) {
             String errorMsg = URLEncoder.encode(ex.getMessage(), StandardCharsets.UTF_8);
             return "redirect:/register?error=" + errorMsg;
         }
     }
 }
-
-

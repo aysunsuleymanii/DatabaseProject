@@ -1,6 +1,8 @@
 package mk.ukim.finki.easyfood.repository;
 
+import mk.ukim.finki.easyfood.model.AppUser;
 import mk.ukim.finki.easyfood.model.Customer;
+import mk.ukim.finki.easyfood.model.Item;
 import mk.ukim.finki.easyfood.model.ShoppingCart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,5 +14,12 @@ import java.util.Optional;
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
 
     Optional<ShoppingCart> findByCustomer(Customer customer);
+
+    default Optional<ShoppingCart> findByCustomerId(Long customerId) {
+        return findAll().stream()
+                .filter(cart -> cart.getCustomer().getId().equals(customerId))
+                .findFirst();
+    }
+
 
 }

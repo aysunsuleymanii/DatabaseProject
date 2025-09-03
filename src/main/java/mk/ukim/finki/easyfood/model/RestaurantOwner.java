@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import mk.ukim.finki.easyfood.model.enumerations.ROLE;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -25,6 +26,15 @@ public class RestaurantOwner extends AppUser {
 
     public RestaurantOwner(String email, String password, String firstName, String lastName, String phone, ROLE role) {
         super(email, password, firstName, lastName, phone, role);
+    }
+
+
+    public List<Restaurant> getRestaurants() {
+        return restaurants;
+    }
+
+    public void setRestaurants(List<Restaurant> restaurants) {
+        this.restaurants = restaurants;
     }
 }
 

@@ -44,8 +44,6 @@ public class Restaurant {
     private String phoneNumber;
 
 
-    // getters and setters
-
     public Long getId() {
         return id;
     }

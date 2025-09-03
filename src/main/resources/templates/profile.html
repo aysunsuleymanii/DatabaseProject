@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          crossorigin="anonymous">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editDetailsBtn = document.getElementById('editDetailsBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            const detailsDisplay = document.getElementById('detailsDisplay');
+            const detailsForm = document.getElementById('detailsForm');
+
+            editDetailsBtn.addEventListener('click', function () {
+                detailsDisplay.style.display = 'none';
+                detailsForm.style.display = 'block';
+                editDetailsBtn.style.display = 'none';
+            });
+
+            cancelEditBtn.addEventListener('click', function () {
+                detailsDisplay.style.display = 'block';
+                detailsForm.style.display = 'none';
+                editDetailsBtn.style.display = 'block';
+            });
+        });
+    </script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-nav a {
+            color: #d9902e;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .profile-nav a:hover {
+            color: #f0ad4e;
+        }
+
+        .card-header {
+            background-color: #f0ad4e;
+            color: white;
+            border-bottom: 2px solid #d9902e;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .list-group-item strong {
+            color: #333;
+        }
+
+        .add-address-btn {
+            background-color: #d9902e;
+            border-color: #d9902e;
+        }
+
+        .add-address-btn:hover {
+            background-color: #f0ad4e;
+            border-color: #f0ad4e;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar bg-body-tertiary shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="/images/logo.JPG" alt="Logo" height="90" class="d-inline-block align-text-top">
+        </a>
+        <form class="d-flex mx-auto w-50" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search for food..." aria-label="Search">
+            <button class="btn btn-warning" type="submit">Search</button>
+        </form>
+        <div class="d-flex align-items-center gap-2">
+            <a href="/cart" class="btn btn-outline-secondary rounded-circle p-2 position-relative">
+                <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart" width="22" height="22">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">2</span>
+            </a>
+            <a href="/profile" class="btn btn-outline-secondary rounded-circle p-2">
+                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile" width="22" height="22">
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container profile-container">
+    <div class="profile-header">
+        <h1 class="display-4">Welcome, <span th:text="${user.firstName}"></span>!</h1>
+        <hr>
+        <nav class="profile-nav d-flex justify-content-center gap-4">
+            <a href="#details" class="fs-5">View my details</a>
+            <a href="#addresses" class="fs-5">View my addresses</a>
+            <a href="#orders" class="fs-5">View my orders</a>
+        </nav>
+    </div>
+
+    <div id="details" class="card my-4 border-0 shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="h4 mb-0">My Details</h2>
+            <button id="editDetailsBtn" class="btn btn-light btn-sm add-address-btn">Edit</button>
+        </div>
+        <div class="card-body">
+            <div id="detailsDisplay">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Full Name:</strong> <span id="fullNameDisplay"
+                                                                                  th:text="${user.firstName} + ' ' + ${user.lastName}"></span>
+                    </li>
+                    <li class="list-group-item"><strong>Email:</strong> <span id="emailDisplay"
+                                                                              th:text="${user.email}"></span>
+                    </li>
+                    <li class="list-group-item"><strong>Phone Number:</strong> <span id="phoneDisplay"
+                                                                                     th:text="${user.getPhone()}"></span>
+                    </li>
+                </ul>
+            </div>
+            <form id="detailsForm" th:action="@{/profile/update}" method="post" style="display:none;">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <label for="firstNameInput" class="form-label mb-0"><strong>First Name:</strong></label>
+                        <input type="text" id="firstNameInput" name="firstName" class="form-control"
+                               th:value="${user.firstName}">
+                    </li>
+                    <li class="list-group-item">
+                        <label for="lastNameInput" class="form-label mb-0"><strong>Last Name:</strong></label>
+                        <input type="text" id="lastNameInput" name="lastName" class="form-control"
+                               th:value="${user.lastName}">
+                    </li>
+                    <li class="list-group-item">
+                        <label for="emailInput" class="form-label mb-0"><strong>Email:</strong></label>
+                        <input type="email" id="emailInput" name="email" class="form-control" th:value="${user.email}">
+                    </li>
+                    <li class="list-group-item">
+                        <label for="phoneInput" class="form-label mb-0"><strong>Phone Number:</strong></label>
+                        <input type="text" id="phoneInput" name="phone" class="form-control"
+                               th:value="${user.getPhone()}">
+                    </li>
+                </ul>
+                <div class="d-flex justify-content-end mt-3 gap-2">
+                    <button type="button" id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addresses" class="card my-4 border-0 shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="h4 mb-0">My Addresses</h2>
+            <button type="button" class="btn btn-light btn-sm add-address-btn" data-bs-toggle="modal"
+                    data-bs-target="#addAddressModal">
+                <i class="bi bi-plus-circle me-1"></i> Add New Address
+            </button>
+        </div>
+        <div class="card-body">
+            <div th:if="${not #lists.isEmpty(addresses)}">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                        th:each="address : ${addresses}">
+                        <div>
+                            <p class="mb-0"
+                               th:text="${address.street + ', ' + address.city + ', ' + address.getPostalCode()}"></p>
+                        </div>
+                        <form th:action="@{/profile/address/delete}" method="post" style="display: inline;">
+                            <input type="hidden" name="addressId" th:value="${address.id}"/>
+                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this address?')">
+                                Delete
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div th:unless="${not #lists.isEmpty(addresses)}">
+                <p class="text-muted text-center py-3">You have no saved addresses.</p>
+                <div class="text-center">
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                            data-bs-target="#addAddressModal">
+                        Add Your First Address
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    <div id="orders" class="card my-4 border-0 shadow">-->
+    <!--        <div class="card-header">-->
+    <!--            <h2 class="h4 mb-0">My Orders</h2>-->
+    <!--        </div>-->
+    <!--        <div class="card-body">-->
+    <!--            <div th:if="${not #lists.isEmpty(orders)}">-->
+    <!--                <ul class="list-group list-group-flush">-->
+    <!--                    <li class="list-group-item" th:each="order : ${orders}">-->
+    <!--                        <p class="mb-1"><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>-->
+    <!--                        <p class="mb-0"><strong>Order Date:</strong> <span th:text="${order.getOrderDate()}"></span></p>-->
+    <!--                    </li>-->
+    <!--                </ul>-->
+    <!--            </div>-->
+    <!--            <div th:unless="${not #lists.isEmpty(orders)}">-->
+    <!--                <p class="text-muted text-center py-3">You have no past orders.</p>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <div id="orders" class="card my-4 border-0 shadow">
+        <div class="card-header">
+            <h2 class="h4 mb-0">My Orders</h2>
+        </div>
+        <div class="card-body">
+            <div th:if="${not #lists.isEmpty(orders)}">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="order : ${orders}">
+                        <p class="mb-1">
+                            <strong>Order ID:</strong> <span th:text="${order.id}"></span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>Order Date:</strong> <span
+                                th:text="${order.orderDate}"></span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>Order Total:</strong> <span
+                                th:text="${order.getTotalAmount()}"></span>
+                        </p>
+                        <p class="mb-0">
+                            <strong>Restaurant:</strong> <span th:text="${order.getRestaurantName()}"></span>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div th:unless="${not #lists.isEmpty(orders)}">
+                <p class="text-muted text-center py-3">You have no past orders.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/profile/address/add}" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="street" class="form-label">Street Address</label>
+                        <input type="text" class="form-control" id="street" name="street" required
+                               placeholder="123 Main Street, Apt 4B">
+                    </div>
+                    <div class="mb-3">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city" name="city" required
+                               placeholder="Skopje">
+                    </div>
+                    <div class="mb-3">
+                        <label for="postalCode" class="form-label">Postal Code</label>
+                        <input type="text" class="form-control" id="postalCode" name="postalCode" required
+                               placeholder="1000">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Add Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+</body>
+</html>

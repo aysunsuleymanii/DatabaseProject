@@ -27,4 +27,17 @@ public class MenuItem implements Serializable {
     public Item getItem() {
         return item;
     }
+
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 }

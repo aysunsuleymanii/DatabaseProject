@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - EasyFood</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .confirmation-container {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .success-header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 2rem;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+
+        .order-info-card, .delivery-timeline {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-step {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #6c757d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .timeline-step.completed .timeline-icon {
+            background-color: #28a745;
+        }
+
+        .timeline-step.active .timeline-icon {
+            background-color: #0d6efd;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar bg-body-tertiary shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/home">
+            <img src="/images/logo.JPG" alt="Logo" height="90" class="d-inline-block align-text-top">
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid mt-4">
+    <div class="confirmation-container">
+        <div class="success-header">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Order Confirmed!</h1>
+            <p class="text-muted mb-0">Thank you for your order. We're preparing it now!</p>
+        </div>
+
+        <div class="order-details">
+            <div class="order-info-card">
+                <h4><i class="fas fa-receipt me-2"></i>Order Information</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Order ID:</strong> #<span th:text="${order.id}"></span></p>
+                        <p><strong>Order Date:</strong>
+                            <span th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy HH:mm')}"></span>
+                        </p>
+                        <p><strong>Status:</strong>
+                            <span class="status-badge" th:text="${order.orderStatus}"></span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Total Amount:</strong>
+                            <span class="text-success fw-bold" th:text="${order.totalAmount}"></span>
+                        </p>
+                        <p><strong>Delivery Address:</strong></p>
+                        <small>
+                            <span th:text="${order.address.street}"></span><br>
+                            <span th:text="${order.address.city} + ', ' + ${order.address.postalCode}"></span>
+                        </small>
+                    </div>
+                </div>
+                <div th:if="${order.comment}" class="mt-3">
+                    <p><strong>Notes:</strong> <span th:text="${order.comment}"></span></p>
+                </div>
+            </div>
+
+            <div class="order-info-card">
+                <h4><i class="fas fa-utensils me-2"></i>Order Items</h4>
+                <div th:each="orderItem : ${orderItems}" class="order-item">
+                    <div>
+                        <strong th:text="${orderItem.item.name}"></strong>
+                        <small class="text-muted">x<span th:text="${orderItem.quantity}"></span></small>
+                    </div>
+                    <span th:text="${orderItem.totalPrice}"></span>
+                </div>
+            </div>
+
+            <div class="delivery-timeline">
+                <h4><i class="fas fa-truck me-2"></i>Delivery Status</h4>
+
+                <div class="timeline-step completed">
+                    <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                    <div>
+                        <strong>Order Confirmed</strong>
+                        <small class="text-muted d-block">Your order has been received and confirmed</small>
+                    </div>
+                </div>
+
+                <div class="timeline-step active">
+                    <div class="timeline-icon"><i class="fas fa-utensils"></i></div>
+                    <div>
+                        <strong>Preparing</strong>
+                        <small class="text-muted d-block">Restaurant is preparing your order</small>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-icon"><i class="fas fa-motorcycle"></i></div>
+                    <div>
+                        <strong>Out for Delivery</strong>
+                        <small class="text-muted d-block">Your order is on the way</small>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-icon"><i class="fas fa-home"></i></div>
+                    <div>
+                        <strong>Delivered</strong>
+                        <small class="text-muted d-block">Order delivered successfully</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/profile" class="btn btn-warning btn-custom">
+                    <i class="fas fa-user me-2"></i>View Profile
+                </a>
+                <a href="/orders" class="btn btn-outline-warning btn-custom">
+                    <i class="fas fa-history me-2"></i>Order History
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show position-fixed"
+     style="top: 20px; right: 20px; z-index: 1050;">
+    <span th:text="${successMessage}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+</body>
+</html>

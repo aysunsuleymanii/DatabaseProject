@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>EasyFood - Login</title>
@@ -13,20 +13,16 @@
     <div class="container-fluid">
         <!-- Logo -->
         <a class="navbar-brand d-flex align-items-center" href="index.html">
-            <img src="media/easyfood.png" alt="Logo" height="40">
+            <img src="/images/logo.JPG" alt="Logo" height="80">
         </a>
-
-
-
-        <!-- Profile Icon -->
-        <div class="d-flex align-items-center">
-
-        </div>
+        <div class="d-flex align-items-center"></div>
     </div>
 </nav>
 
+<!-- Centering div -->
+<div class="mt-5 d-flex justify-content-center"></div>
 
-<!-- Profile Settings -->
+<!-- Login Form -->
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
@@ -35,30 +31,61 @@
                     <!-- Title -->
                     <h3 class="mb-4 text-center">Login</h3>
 
-                    <!-- Profile Picture -->
+                    <!-- Error Messages -->
+                    <div th:if="${param.error}" class="alert alert-danger text-center mb-3">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Invalid email or password. Please try again.
+                    </div>
+
+                    <!-- Success Messages -->
+                    <div th:if="${param.logout}" class="alert alert-success text-center mb-3">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        You have been logged out successfully.
+                    </div>
+
+                    <!-- Registration Success Message -->
+                    <div th:if="${param.registered}" class="alert alert-success text-center mb-3">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        Registration successful! Please login with your credentials.
+                    </div>
+
+                    <!-- Profile Icon -->
                     <div class="text-center mb-4">
                         <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
                              class="rounded-circle border shadow-sm"
                              alt="Profile" width="100" height="100">
-
                     </div>
 
-                    <!-- Form -->
-                    <form>
-
+                    <!-- Form - Spring Security will process this -->
+                    <form class="form-signin mt-xl-5" method="post" th:action="@{/login}">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Email</label>
-                            <input type="email" class="form-control" value="john@example.com">
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email"
+                                   required autofocus>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Password</label>
-                            <input type="password" class="form-control" placeholder="********">
+                            <input type="password" name="password" class="form-control"
+                                   placeholder="Enter your password" required>
                         </div>
 
+                        <!-- Remember Me Option -->
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" name="remember-me" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
 
                         <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-warning fw-semibold">login</button>
+                            <button type="submit" class="btn btn-warning fw-semibold px-4">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <small>Don't have an account? <a href="/register" class="text-decoration-none">Register here</a></small>
                         </div>
                     </form>
 

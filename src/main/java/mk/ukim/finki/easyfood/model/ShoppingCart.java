@@ -2,6 +2,7 @@ package mk.ukim.finki.easyfood.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,17 +15,45 @@ public class ShoppingCart {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "customer_id") // foreign key column
+    @JoinColumn(name = "user_id")
     private Customer customer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItems> cartItems;
+    private List<CartItems> cartItems = new ArrayList<>();
 
-    public List<CartItems> getCartItems() {
-        return cartItems;
+    public ShoppingCart() {
+        this.cartItems = new ArrayList<>();
+    }
+
+    public ShoppingCart(Customer customer) {
+        this.customer = customer;
+        this.cartItems = new ArrayList<>();
     }
 
     public void setCartItems(List<CartItems> cartItems) {
         this.cartItems = cartItems;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public List<CartItems> getCartItems() {
+        if (cartItems == null) {
+            cartItems = new ArrayList<>();
+        }
+        return cartItems;
     }
 }
