@@ -172,8 +172,6 @@ public class OrderController {
                     boolean paymentSuccessful = processPayment(paymentMethod, totalAmount);
 
                     if (paymentSuccessful) {
-                        cartService.clearCart(customer.getId());
-
                         redirectAttributes.addFlashAttribute("successMessage",
                                 "Order placed successfully! Order ID: " + savedOrder.getId());
                         return "redirect:/order/confirmation/" + savedOrder.getId();

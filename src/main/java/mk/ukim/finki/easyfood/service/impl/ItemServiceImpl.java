@@ -4,14 +4,12 @@ import jakarta.persistence.criteria.Join;
 import mk.ukim.finki.easyfood.model.*;
 
 import mk.ukim.finki.easyfood.model.exceptions.ItemNotFoundException;
-import mk.ukim.finki.easyfood.repository.ItemRepository;
-import mk.ukim.finki.easyfood.repository.MenuItemRepository;
-import mk.ukim.finki.easyfood.repository.MenuRepository;
-import mk.ukim.finki.easyfood.repository.RestaurantRepository;
+import mk.ukim.finki.easyfood.repository.*;
 import mk.ukim.finki.easyfood.service.ItemService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Predicate; // This is the correct one
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +22,17 @@ public class ItemServiceImpl implements ItemService {
     private final MenuItemRepository menuItemRepository;
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;
+    private final CartItemsRepository cartItemsRepository;
 
     public ItemServiceImpl(ItemRepository itemRepository,
                            MenuItemRepository menuItemRepository,
                            MenuRepository menuRepository,
-                           RestaurantRepository restaurantRepository) {
+                           RestaurantRepository restaurantRepository, CartItemsRepository cartItemsRepository) {
         this.itemRepository = itemRepository;
         this.menuItemRepository = menuItemRepository;
         this.menuRepository = menuRepository;
         this.restaurantRepository = restaurantRepository;
+        this.cartItemsRepository = cartItemsRepository;
     }
 
     @Override
@@ -41,23 +41,20 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> findRecommendedItems() {
-        return itemRepository.findAll().stream().limit(5).collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<Item> findRecommendedItems(Long userId) {
+        List<CartItems> cartItems = cartItemsRepository.findByCart_Customer_Id(userId);
+        List<Long> cartItemIds = cartItems.stream()
+                .map(ci -> ci.getItem().getId())
+                .toList();
+
+        if (cartItemIds.isEmpty()) {
+            return itemRepository.findTop5PopularItems();
+        } else {
+            return itemRepository.findItemsBoughtTogether(cartItemIds);
+        }
     }
 
-//    @Override
-//    public List<Item> findItemsByRestaurantId(Long restaurantId) {
-//        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-//                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
-//
-//        Menu menu = menuRepository.findByRestaurant(restaurant);
-//        if (menu == null) return List.of();
-//
-//        List<MenuItem> menuItems = menuItemRepository.findByMenu(menu);
-//        return menuItems.stream()
-//                .map(MenuItem::getItem)
-//                .collect(Collectors.toList());
-//    }
 
     public List<Item> getItemsByMenuId(Long menuId) {
         Menu menu = menuRepository.findById(menuId)
@@ -101,6 +98,11 @@ public class ItemServiceImpl implements ItemService {
         };
 
         return itemRepository.findAll(specification);
+    }
+
+    @Override
+    public List<Item> findItemsByCategoryId(Long categoryId) {
+        return this.itemRepository.findItemsByCategoryId(categoryId);
     }
 
 }

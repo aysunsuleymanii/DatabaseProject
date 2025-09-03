@@ -4,7 +4,10 @@ import mk.ukim.finki.easyfood.model.Item;
 import mk.ukim.finki.easyfood.model.Menu;
 import mk.ukim.finki.easyfood.model.MenuItem;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +19,8 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     List<MenuItem> findByItem(Item item);
 
     Optional<MenuItem> findFirstByItem(Item item);
+
+    List<MenuItem> findByMenuId(Long menuId);
+
+    void deleteByItemId(Long itemId);
 }

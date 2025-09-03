@@ -33,23 +33,27 @@ public class HomeController {
     @GetMapping
     public String getHomePage(Model model,
                               Authentication authentication,
-                              @RequestParam(required = false) String searchTerm) {
+                              @RequestParam(required = false) String searchTerm,
+                              @RequestParam(required = false) Long categoryId) {
         List<Category> categories = categoryService.listCategories();
         List<Item> items;
 
-        // If a search term is present, show search results; otherwise, show all items
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            if (username.equals("admin@easyfood.com") || username.contains("admin")) {
+                return "redirect:/admin";
+            }
+        }
+
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             items = itemService.searchItems(searchTerm);
             model.addAttribute("searchTerm", searchTerm);
+        } else if (categoryId != null) {
+            items = itemService.findItemsByCategoryId(categoryId);
         } else {
             items = itemService.findAll();
         }
 
-        List<Item> recommendedItems = itemService.findRecommendedItems();
-
-        model.addAttribute("categories", categories);
-        model.addAttribute("items", items);
-        model.addAttribute("recommendedItems", recommendedItems);
 
         Long userId = null;
         if (authentication != null && authentication.getPrincipal() instanceof Customer) {
@@ -63,6 +67,11 @@ public class HomeController {
         }
 
         model.addAttribute("numberOfItems", numberOfItems);
+        List<Item> recommendedItems = itemService.findRecommendedItems(userId);
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("items", items);
+        model.addAttribute("recommendedItems", recommendedItems);
 
         return "main_pg";
     }

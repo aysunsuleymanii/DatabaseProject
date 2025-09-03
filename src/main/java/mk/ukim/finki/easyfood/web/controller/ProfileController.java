@@ -3,9 +3,11 @@ package mk.ukim.finki.easyfood.web.controller;
 import mk.ukim.finki.easyfood.model.Customer;
 import mk.ukim.finki.easyfood.model.Address;
 import mk.ukim.finki.easyfood.model.Order;
+import mk.ukim.finki.easyfood.model.OrderItems;
 import mk.ukim.finki.easyfood.service.UserService;
 import mk.ukim.finki.easyfood.service.AddressService;
 import mk.ukim.finki.easyfood.service.OrderService;
+import mk.ukim.finki.easyfood.repository.OrderItemsRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -27,11 +28,14 @@ public class ProfileController {
     private final UserService userService;
     private final AddressService addressService;
     private final OrderService orderService;
+    private final OrderItemsRepository orderItemsRepository;
 
-    public ProfileController(UserService userService, AddressService addressService, OrderService orderService) {
+    public ProfileController(UserService userService, AddressService addressService,
+                             OrderService orderService, OrderItemsRepository orderItemsRepository) {
         this.userService = userService;
         this.addressService = addressService;
         this.orderService = orderService;
+        this.orderItemsRepository = orderItemsRepository;
     }
 
     @GetMapping
@@ -48,7 +52,15 @@ public class ProfileController {
             if (customerOptional.isPresent()) {
                 Customer customer = customerOptional.get();
 
+                // Get orders for the user
                 List<Order> orders = orderService.findAllByUserId(customer.getId());
+
+                // Load order items for each order (including deleted items)
+                for (Order order : orders) {
+                    List<OrderItems> orderItems = orderItemsRepository.findByOrderId(order.getId());
+                    order.setOrderItems(orderItems);
+                }
+
                 List<Address> addresses = customer.getAddresses();
                 model.addAttribute("user", customer);
                 model.addAttribute("addresses", addresses);

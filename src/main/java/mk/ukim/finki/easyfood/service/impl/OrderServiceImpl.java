@@ -8,6 +8,7 @@ import mk.ukim.finki.easyfood.repository.DeliveryManRepository;
 import mk.ukim.finki.easyfood.repository.OrderItemsRepository;
 import mk.ukim.finki.easyfood.repository.OrderRepository;
 import mk.ukim.finki.easyfood.service.OrderService;
+import mk.ukim.finki.easyfood.service.ShoppingCartService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +21,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final DeliveryManRepository deliveryManRepository;
     private final OrderItemsRepository orderItemsRepository;
+    private final ShoppingCartService shoppingCartService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, DeliveryManRepository deliveryManRepository, OrderItemsRepository orderItemsRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, DeliveryManRepository deliveryManRepository, OrderItemsRepository orderItemsRepository, ShoppingCartService shoppingCartService) {
         this.orderRepository = orderRepository;
         this.deliveryManRepository = deliveryManRepository;
         this.orderItemsRepository = orderItemsRepository;
+        this.shoppingCartService = shoppingCartService;
     }
 
     @Override
@@ -60,16 +63,28 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrderWithItems(Order order, List<CartItems> cartItems) {
         Order savedOrder = orderRepository.save(order);
 
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
         for (CartItems cartItem : cartItems) {
             OrderItems orderItem = new OrderItems();
             orderItem.setOrder(savedOrder);
             orderItem.setItem(cartItem.getItem());
             orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setTotalPrice(cartItem.getItem().getPrice()
-                    .multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+
+            BigDecimal itemTotal = cartItem.getItem().getPrice()
+                    .multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+
+            orderItem.setTotalPrice(itemTotal);
+            totalAmount = totalAmount.add(itemTotal);
 
             orderItemsRepository.save(orderItem);
         }
+
+        savedOrder.setTotalAmount(totalAmount);
+        orderRepository.save(savedOrder);
+
+        // ✅ clear cart inside same transaction
+        shoppingCartService.clearCart(order.getCustomer().getId());
 
         return savedOrder;
     }
