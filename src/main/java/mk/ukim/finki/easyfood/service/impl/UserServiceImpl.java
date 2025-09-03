@@ -7,19 +7,24 @@ import mk.ukim.finki.easyfood.model.exceptions.InvalidArgumentsException;
 import mk.ukim.finki.easyfood.model.exceptions.PasswordsDoNotMatchException;
 import mk.ukim.finki.easyfood.model.exceptions.UsernameAlreadyExistsException;
 import mk.ukim.finki.easyfood.repository.AppUserRepository;
+import mk.ukim.finki.easyfood.repository.CustomerRepository;
 import mk.ukim.finki.easyfood.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final AppUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CustomerRepository customerRepository;
 
-    public UserServiceImpl(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder, CustomerRepository customerRepository) {
         this.userRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
+        this.customerRepository = customerRepository;
     }
 
 
@@ -47,6 +52,23 @@ public class UserServiceImpl implements UserService {
 
         Customer customer = new Customer(email, passwordEncoder.encode(password), firstName, lastName, phoneNumber, ROLE.CUSTOMER);
 
+        return userRepository.save(customer);
+    }
+
+    @Override
+    public Customer getCustomerById(Long id) {
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
+    }
+
+
+    @Override
+    public Optional<Customer> findByEmail(String email) {
+        return customerRepository.findByEmail(email);
+    }
+
+    @Override
+    public Customer save(Customer customer) {
         return userRepository.save(customer);
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>My Cart - EasyFood</title>
@@ -10,18 +10,16 @@
 </head>
 <body class="bg-light">
 
-<!-- Navbar -->
 <nav class="navbar bg-body-tertiary shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="home.html">
-            <img src="media/easyfood.png" alt="Logo" height="40" class="d-inline-block align-text-top">
+        <a class="navbar-brand d-flex align-items-center" href="/home">
+            <img src="/images/logo.JPG" alt="Logo" height="90" class="d-inline-block align-text-top">
         </a>
 
         <span class="fw-semibold fs-5 mx-auto">My Shopping Cart</span>
 
         <div class="d-flex align-items-center gap-2">
-            <!-- Profile -->
-            <a href="profile.html" class="btn btn-outline-secondary rounded-circle p-2">
+            <a href="/profile" class="btn btn-outline-secondary rounded-circle p-2">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
                      alt="Profile" width="22" height="22">
             </a>
@@ -29,59 +27,55 @@
     </div>
 </nav>
 
-<!-- Cart Content -->
 <div class="container my-4">
     <h4 class="mb-3">Your Items</h4>
 
-    <!-- Item 1 -->
-    <div class="card shadow-sm border-0 w-100 mb-3">
-        <div class="row g-0">
-            <div class="col-md-3 col-4">
-                <img src="media/burger.png"
-                     class="w-100 object-fit-cover rounded-start"
-                     alt="Burger"
-                     style="height:150px;">
+    <div th:if="${cartItems != null and not #lists.isEmpty(cartItems)}">
+        <div th:each="cartItem : ${cartItems}" class="card shadow-sm border-0 w-100 mb-3">
+            <div class="row g-0">
+                <div class="col-md-3 col-4">
+                    <img th:src="@{'/media/' + ${cartItem.item.imageUrl}}"
+                         class="w-100 object-fit-cover rounded-start"
+                         th:alt="${cartItem.item.name}"
+                         style="height:150px;">
+                </div>
+                <div class="col-md-9 col-8 d-flex flex-column justify-content-between p-3" style="height:150px;">
+                    <div>
+                        <h5 class="card-title mb-1" th:text="${cartItem.item.name}">Item Name</h5>
+                        <p class="card-text text-muted fs-6 fw-semibold mb-2"
+                           th:text="${#numbers.formatDecimal(cartItem.item.price, 0, 'POINT', 2, 'COMMA')} + '$'">
+                            Price</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <form th:action="@{/cart/update}" method="post" class="d-flex align-items-center gap-2">
+                            <input type="hidden" name="itemId" th:value="${cartItem.item.id}"/>
+                            <input type="number" name="quantity" class="form-control w-25"
+                                   th:value="${cartItem.quantity}" min="1">
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="itemId" th:value="${cartItem.item.id}"/>
+                            <button class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-9 col-8 d-flex flex-column justify-content-between p-3" style="height:150px;">
-                <div>
-                    <h5 class="card-title mb-1">Cheese Burger</h5>
-                    <p class="card-text text-muted fs-6 fw-semibold mb-2">12.99$</p>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <input type="number" class="form-control w-25" value="1" min="1">
-                    <button class="btn btn-danger btn-sm">Remove</button>
-                </div>
+        </div>
+
+        <div class="card shadow-sm border-0 p-3 mt-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Total: <span class="text-warning"
+                                 th:text="${#numbers.formatDecimal(total, 0, 'POINT', 2, 'COMMA')} + '$'">43.97$</span>
+                </h5>
+                <a href="checkout.html" class="btn btn-warning fw-semibold">Proceed to Checkout</a>
             </div>
         </div>
     </div>
 
-    <!-- Item 2 -->
-    <div class="card shadow-sm border-0 w-100 mb-3">
-        <div class="row g-0">
-            <div class="col-md-3 col-4">
-                <img src="media/pizza.png"
-                     class="w-100 object-fit-cover rounded-start"
-                     alt="Pizza"
-                     style="height:150px;">
-            </div>
-            <div class="col-md-9 col-8 d-flex flex-column justify-content-between p-3" style="height:150px;">
-                <div>
-                    <h5 class="card-title mb-1">Pepperoni Pizza</h5>
-                    <p class="card-text text-muted fs-6 fw-semibold mb-2">15.49$</p>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <input type="number" class="form-control w-25" value="2" min="1">
-                    <button class="btn btn-danger btn-sm">Remove</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Checkout -->
-    <div class="card shadow-sm border-0 p-3 mt-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5>Total: <span class="text-warning">43.97$</span></h5>
-            <a href="checkout.html" class="btn btn-warning fw-semibold">Proceed to Checkout</a>
+    <div th:unless="${cartItems != null and not #lists.isEmpty(cartItems)}" class="text-center">
+        <div class="alert alert-info mt-5" role="alert">
+            <p class="mb-0">Your cart is empty.</p>
+            <p>Go back to <a href="/home" class="alert-link">the home page</a> to add some items!</p>
         </div>
     </div>
 </div>

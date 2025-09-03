@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface OrderService {
     public List<Order> listOrdersByDeliveryManAndOrderStatus(Long deliveryMan, String orderStatus);
+
     List<Order> listAllOrders();
+
+    List<Order> findAllByUserId(Long id);
 }

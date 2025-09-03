@@ -80,6 +80,53 @@
             border-top-right-radius: 12px;
         }
 
+        /* Cart badge styling */
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        /* Hide badge when count is 0 */
+        .cart-badge.d-none {
+            display: none !important;
+        }
+
+        .recommended-scroll-items {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scroll-behavior: smooth;
+        }
+
+        .recommended-scroll-items .card {
+            flex: 0 0 auto;
+            width: 14rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .recommended-scroll-items .card:hover {
+            transform: scale(1.05);
+        }
+
+        .recommended-scroll-items img {
+            height: 140px;
+            object-fit: cover;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -97,9 +144,12 @@
         <div class="d-flex align-items-center gap-2">
             <a href="cart.html" class="btn btn-outline-secondary rounded-circle p-2 position-relative">
                 <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart" width="22" height="22">
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">2</span>
+                <!-- Fixed cart badge with proper conditional display -->
+                <span class="cart-badge bg-warning text-dark"
+                      th:classappend="${numberOfItems == 0} ? 'd-none' : ''"
+                      th:text="${numberOfItems}">0</span>
             </a>
-            <a href="profile.html" class="btn btn-outline-secondary rounded-circle p-2">
+            <a href="/profile" class="btn btn-outline-secondary rounded-circle p-2">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile" width="22" height="22">
             </a>
         </div>
@@ -109,7 +159,7 @@
 <!-- Quote -->
 <div class="text-center my-3">
     <blockquote class="blockquote">
-        <p class="fs-5">“Fresh flavors delivered to your door.”</p>
+        <p class="fs-5">"Fresh flavors delivered to your door."</p>
     </blockquote>
 </div>
 
@@ -121,32 +171,41 @@
 </div>
 
 <div id="Recommended" class="container-fluid my-4">
+    <h4 class="mb-3">Featured Items</h4>
     <div class="recommended-scroll">
         <div class="card" th:each="item : ${items}">
             <img th:src="@{'/images/media/' + ${item.imageUrl}}" class="card-img-top" th:alt="${item.name}">
             <div class="card-body">
                 <h5 class="card-title" th:text="${item.name}">Item Name</h5>
                 <p class="card-text text-muted" th:text="${item.price} + '$'">Price</p>
-                <a href="#" class="btn btn-warning w-100">Add to cart</a>
+
+                <form th:action="@{/cart/add}" method="post">
+                    <input type="hidden" name="itemId" th:value="${item.id}"/>
+                    <button type="submit" class="btn btn-warning w-100">Add to cart</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-
-<div id="RecommendedItems" class="container-fluid my-4">
+<div id="RecommendedItems" class="container-fluid my-4"
+     th:if="${recommendedItems != null and !recommendedItems.isEmpty()}">
+    <h4 class="mb-3">Recommended for You</h4>
     <div class="recommended-scroll-items">
         <div class="card" th:each="item : ${recommendedItems}">
             <img th:src="@{'/images/media/' + ${item.imageUrl}}" class="card-img-top" th:alt="${item.name}">
             <div class="card-body">
                 <h5 class="card-title" th:text="${item.name}">Item Name</h5>
                 <p class="card-text text-muted" th:text="${item.price} + '$'">Price</p>
-                <a href="#" class="btn btn-warning w-100">Add to cart</a>
+
+                <form th:action="@{/cart/add}" method="post">
+                    <input type="hidden" name="itemId" th:value="${item.id}"/>
+                    <button type="submit" class="btn btn-warning w-100">Add to cart</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
 
 </body>
 </html>

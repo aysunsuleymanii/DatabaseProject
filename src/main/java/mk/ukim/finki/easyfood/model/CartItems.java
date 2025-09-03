@@ -29,4 +29,16 @@ public class CartItems {
     public Integer getQuantity() {
         return quantity;
     }
+
+    public void setCart(ShoppingCart cart) {
+        this.cart = cart;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 }

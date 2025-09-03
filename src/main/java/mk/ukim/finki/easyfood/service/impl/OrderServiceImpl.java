@@ -23,10 +23,15 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> listAllOrders() {
         return orderRepository.findAll();
     }
+
     @Override
     public List<Order> listOrdersByDeliveryManAndOrderStatus(Long deliveryMan, String orderStatus) {
         DeliveryMan deliveryMan1 = deliveryManRepository.findById(deliveryMan).orElse(null);
         return orderRepository.findAllByDeliveryManAndOrderStatus(deliveryMan1, orderStatus);
     }
 
+    @Override
+    public List<Order> findAllByUserId(Long id) {
+        return this.orderRepository.findAllById(id);
+    }
 }

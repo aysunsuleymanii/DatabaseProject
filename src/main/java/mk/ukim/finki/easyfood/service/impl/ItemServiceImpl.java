@@ -2,6 +2,7 @@ package mk.ukim.finki.easyfood.service.impl;
 
 import mk.ukim.finki.easyfood.model.*;
 
+import mk.ukim.finki.easyfood.model.exceptions.ItemNotFoundException;
 import mk.ukim.finki.easyfood.repository.ItemRepository;
 import mk.ukim.finki.easyfood.repository.MenuItemRepository;
 import mk.ukim.finki.easyfood.repository.MenuRepository;
@@ -63,6 +64,11 @@ public class ItemServiceImpl implements ItemService {
         return menuItems.stream()
                 .map(MenuItem::getItem)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Item findById(Long itemId) {
+        return this.itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
 }

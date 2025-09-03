@@ -38,7 +38,7 @@ public class AppUser {
     @Enumerated(EnumType.STRING)
     private ROLE role;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_addresses",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -55,7 +55,6 @@ public class AppUser {
         this.phone = phone;
         this.role = role;
     }
-
 
 
 }
