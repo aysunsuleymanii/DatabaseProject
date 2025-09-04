@@ -1,9 +1,9 @@
 package mk.ukim.finki.easyfood.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import mk.ukim.finki.easyfood.model.enumerations.ROLE;
+import mk.ukim.finki.easyfood.model.Order;
 
 import java.util.List;
 
@@ -27,5 +27,12 @@ public class Customer extends AppUser {
         super(email, password, firstName, lastName, phone, role);
     }
 
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
 }
 

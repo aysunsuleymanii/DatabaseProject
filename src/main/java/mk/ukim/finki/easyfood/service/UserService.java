@@ -14,6 +14,8 @@ public interface UserService {
 
     Optional<Customer> findByEmail(String email);
 
+    Optional<DeliveryMan> findByEmailDM(String email);
+
     public Customer save(Customer customer);
 
     DeliveryMan registerDeliveryMan(String fullName, String email, String phoneNumber,

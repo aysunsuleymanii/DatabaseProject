@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Table(name = "restaurant_owner")
 @PrimaryKeyJoinColumn(name = "user_id")
-@NoArgsConstructor
 public class RestaurantOwner extends AppUser {
 
 
@@ -26,6 +25,10 @@ public class RestaurantOwner extends AppUser {
 
     public RestaurantOwner(String email, String password, String firstName, String lastName, String phone, ROLE role) {
         super(email, password, firstName, lastName, phone, role);
+    }
+
+    public RestaurantOwner() {
+
     }
 
 

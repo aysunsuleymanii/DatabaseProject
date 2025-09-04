@@ -3,6 +3,7 @@ package mk.ukim.finki.easyfood.config;
 import mk.ukim.finki.easyfood.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,6 +41,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/error", "/home", "/").permitAll()
+                        .requestMatchers("/DeliveryMan/accept/**", "/DeliveryMan/deliver/**","/DeliveryMan/**").hasRole("DELIVERY_MAN")
                         .requestMatchers("/admin/register").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -49,14 +51,16 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/home", true)
+                        .defaultSuccessUrl("/post-login", true) // Change this line
                         .failureUrl("/login?error=true")
                         .permitAll()
+
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
+
                         .permitAll()
                 )
                 .sessionManagement(session -> session
