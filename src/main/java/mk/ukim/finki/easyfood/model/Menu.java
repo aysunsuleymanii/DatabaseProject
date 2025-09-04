@@ -33,4 +33,20 @@ public class Menu {
     public Long getId() {
         return id;
     }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

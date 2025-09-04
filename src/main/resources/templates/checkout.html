@@ -75,8 +75,9 @@
     <div class="checkout-container">
         <div class="text-center mb-4">
             <h1 class="fw-bold"><i class="fas fa-shopping-cart me-3"></i>Checkout</h1>
-            <p class="text-muted">Complete your order from <strong th:text="${restaurant.name}"></strong></p>
-        </div>
+            <p class="text-muted">Complete your order
+                <span th:if="${restaurant != null}">from <strong th:text="${restaurant.getName()}"></strong></span>
+            </p>        </div>
 
         <div class="row">
             <div class="col-md-8">

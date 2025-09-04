@@ -13,7 +13,7 @@
     <div class="container-fluid">
         <!-- Logo -->
         <a class="navbar-brand d-flex align-items-center" href="index.html">
-            <img src="media/easyfood.png" alt="Logo" height="40">
+            <img src="/images/logo.JPG" alt="Logo" height="40">
         </a>
 
 
@@ -46,29 +46,38 @@
                     <div xmlns:th="http://www.thymeleaf.org">
                         <!-- Form -->
                         <form class="form-signin mt-xl-5" method="post" action="/register">
+                            <!-- Add CSRF token -->
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Full Name</label>
-                                <input type="text" name="fullName" class="form-control" value="">
+                                <input type="text" name="fullName" class="form-control" value="" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Email</label>
-                                <input type="email" name="email" class="form-control" value="">
+                                <input type="email" name="email" class="form-control" value="" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Phone Number</label>
-                                <input type="tel" name="phoneNumber" class="form-control" value="">
+                                <input type="tel" name="phoneNumber" class="form-control" value="" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="">
+                                <input type="password" name="password" class="form-control" placeholder="" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Repeat Password</label>
-                                <input type="password" name="repeatedPassword" class="form-control" placeholder="">
+                                <input type="password" name="repeatedPassword" class="form-control" placeholder=""
+                                       required>
+                            </div>
+
+                            <!-- Display error message if any -->
+                            <div th:if="${error}" class="alert alert-danger" role="alert">
+                                <span th:text="${error}"></span>
                             </div>
 
                             <div class="d-flex justify-content-center">

@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
         Customer customer = new Customer(email, passwordEncoder.encode(password), firstName, lastName, phoneNumber, ROLE.CUSTOMER);
 
-        return userRepository.save(customer);
+        return customerRepository.save(customer);
     }
 
     @Override

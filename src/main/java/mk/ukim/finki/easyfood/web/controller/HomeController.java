@@ -3,6 +3,7 @@ package mk.ukim.finki.easyfood.web.controller;
 import mk.ukim.finki.easyfood.model.Category;
 import mk.ukim.finki.easyfood.model.Customer;
 import mk.ukim.finki.easyfood.model.Item;
+import mk.ukim.finki.easyfood.model.enumerations.ROLE;
 import mk.ukim.finki.easyfood.service.CategoryService;
 import mk.ukim.finki.easyfood.service.ItemService;
 import mk.ukim.finki.easyfood.service.ShoppingCartService;
@@ -45,6 +46,7 @@ public class HomeController {
             }
         }
 
+
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             items = itemService.searchItems(searchTerm);
             model.addAttribute("searchTerm", searchTerm);
@@ -60,6 +62,7 @@ public class HomeController {
             Customer customer = (Customer) authentication.getPrincipal();
             userId = customer.getId();
         }
+
 
         int numberOfItems = 0;
         if (userId != null) {
