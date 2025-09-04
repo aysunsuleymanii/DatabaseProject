@@ -101,6 +101,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<DeliveryMan> findByEmailDM(String email) {
+        return deliveryManRepository.findByEmail(email);
+    }
+
+    @Override
     public Customer save(Customer customer) {
         return userRepository.save(customer);
     }
