@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 @Table(name = "delivery_man")
 @PrimaryKeyJoinColumn(name = "user_id")
-@Data
 public class DeliveryMan extends AppUser {
     public DeliveryMan(String email, String password, String firstName, String lastName, String phone, ROLE role) {
         super(email, password, firstName, lastName, phone, role);
@@ -20,5 +19,22 @@ public class DeliveryMan extends AppUser {
     }
     @OneToMany(mappedBy = "deliveryMan", fetch = FetchType.LAZY)
     private List<Order> orders;
+
+    public DeliveryMan(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public DeliveryMan(String email, String password, String firstName, String lastName, String phone, ROLE role, List<Order> orders) {
+        super(email, password, firstName, lastName, phone, role);
+        this.orders = orders;
+    }
 }
 

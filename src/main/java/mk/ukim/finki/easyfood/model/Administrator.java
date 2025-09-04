@@ -1,6 +1,7 @@
 package mk.ukim.finki.easyfood.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import mk.ukim.finki.easyfood.model.enumerations.ROLE;
 
@@ -9,6 +10,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "administrator")
 @PrimaryKeyJoinColumn(name = "user_id")
+@Data
+
 public class Administrator extends AppUser {
 
     protected Administrator() {

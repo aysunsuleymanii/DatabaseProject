@@ -4,6 +4,7 @@ import mk.ukim.finki.easyfood.model.CartItems;
 import mk.ukim.finki.easyfood.model.DeliveryMan;
 import mk.ukim.finki.easyfood.model.Order;
 import mk.ukim.finki.easyfood.model.OrderItems;
+import mk.ukim.finki.easyfood.model.enumerations.ORDER_STATUS;
 import mk.ukim.finki.easyfood.repository.DeliveryManRepository;
 import mk.ukim.finki.easyfood.repository.OrderItemsRepository;
 import mk.ukim.finki.easyfood.repository.OrderRepository;
@@ -28,6 +29,14 @@ public class OrderServiceImpl implements OrderService {
         this.deliveryManRepository = deliveryManRepository;
         this.orderItemsRepository = orderItemsRepository;
         this.shoppingCartService = shoppingCartService;
+    }
+    @Override
+    @Transactional
+    public Order updateOrderStatus(Long orderId, ORDER_STATUS newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID: " + orderId));
+        order.setOrderStatus(newStatus.toString()); // Assuming orderStatus is a String in your Order model
+        return orderRepository.save(order);
     }
 
     @Override
