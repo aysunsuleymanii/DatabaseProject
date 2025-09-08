@@ -92,7 +92,6 @@ public class OrderServiceImpl implements OrderService {
         savedOrder.setTotalAmount(totalAmount);
         orderRepository.save(savedOrder);
 
-        // ✅ clear cart inside same transaction
         shoppingCartService.clearCart(order.getCustomer().getId());
 
         return savedOrder;
