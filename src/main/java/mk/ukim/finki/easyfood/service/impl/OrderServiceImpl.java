@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
     public Order updateOrderStatus(Long orderId, ORDER_STATUS newStatus) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid order ID: " + orderId));
-        order.setOrderStatus(newStatus.toString()); // Assuming orderStatus is a String in your Order model
+        order.setOrderStatus(newStatus.toString());
         return orderRepository.save(order);
     }
 
