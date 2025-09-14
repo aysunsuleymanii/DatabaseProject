@@ -30,7 +30,7 @@ public class AdminHomeController {
         model.addAttribute("totalMenus", adminService.getTotalMenusCount());
         model.addAttribute("totalItems", adminService.getTotalItemsCount());
 
-        return "admin_home";
+        return "admin";
     }
 
     // Users Management

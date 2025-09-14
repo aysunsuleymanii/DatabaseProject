@@ -1,6 +1,7 @@
 package mk.ukim.finki.easyfood.repository;
 
 import mk.ukim.finki.easyfood.model.Item;
+import mk.ukim.finki.easyfood.model.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -52,6 +53,29 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
                 LIMIT 5
             """, nativeQuery = true)
     List<Item> findItemsBoughtTogether(@Param("cartItemIds") List<Long> cartItemIds);
+
+    @Query("SELECT DISTINCT i FROM Item i " +
+            "JOIN i.menuItems mi " +
+            "JOIN mi.menu m " +
+            "WHERE m.restaurant.id = :restaurantId")
+    List<Item> findByRestaurantMenus(@Param("restaurantId") Long restaurantId);
+
+    @Query("SELECT i FROM Item i WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%'))")
+    List<Item> findByNameContainingIgnoreCase(@Param("name") String name);
+
+    @Query("SELECT DISTINCT i FROM Item i " +
+            "JOIN i.menuItems mi " +
+            "JOIN mi.menu m " +
+            "WHERE m.restaurant.id = :restaurantId")
+    List<Item> findByRestaurantId(@Param("restaurantId") Long restaurantId);
+
+    // Alternative using Restaurant object
+    @Query("SELECT DISTINCT i FROM Item i " +
+            "JOIN i.menuItems mi " +
+            "JOIN mi.menu m " +
+            "WHERE m.restaurant = :restaurant")
+    List<Item> findByRestaurant(@Param("restaurant") Restaurant restaurant);
+
 
 }
 

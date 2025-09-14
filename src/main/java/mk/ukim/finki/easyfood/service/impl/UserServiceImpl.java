@@ -26,15 +26,20 @@ public class UserServiceImpl implements UserService {
     private final CustomerRepository customerRepository;
     private final RestaurantOwnerRepository restaurantOwnerRepository;
     private final DeliveryManRepository deliveryManRepository;
+    private final UserFactory userFactory;
 
-    public UserServiceImpl(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder,
-                           CustomerRepository customerRepository, RestaurantOwnerRepository restaurantOwnerRepository,
-                           DeliveryManRepository deliveryManRepository) {
-        this.userRepository = appUserRepository;
+    public UserServiceImpl(AppUserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           CustomerRepository customerRepository,
+                           RestaurantOwnerRepository restaurantOwnerRepository,
+                           DeliveryManRepository deliveryManRepository,
+                           UserFactory userFactory) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.customerRepository = customerRepository;
         this.restaurantOwnerRepository = restaurantOwnerRepository;
         this.deliveryManRepository = deliveryManRepository;
+        this.userFactory = userFactory;
     }
 
     private void validateCommonFields(String fullName, String email, String phoneNumber, String password, String repeatPassword) {
@@ -42,7 +47,7 @@ public class UserServiceImpl implements UserService {
                 email == null || email.isEmpty() ||
                 phoneNumber == null || phoneNumber.isEmpty() ||
                 password == null || password.isEmpty()) {
-            throw new InvalidArgumentsException();
+            throw new InvalidArgumentsException("Cannot be validated!");
         }
 
         if (!password.equals(repeatPassword)) {
@@ -63,37 +68,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AppUser register(String fullName, String email, String phoneNumber, String password, String repeatPassword) {
-        if (fullName == null || fullName.isEmpty() ||
-                email == null || email.isEmpty() ||
-                phoneNumber == null || phoneNumber.isEmpty() ||
-                password == null || password.isEmpty()) {
-            throw new InvalidArgumentsException();
-        }
-
-        if (!password.equals(repeatPassword)) {
-            throw new PasswordsDoNotMatchException();
-        }
-
-        if (this.userRepository.findByEmail(email).isPresent()) {
-            throw new UsernameAlreadyExistsException(email);
-        }
-
-
-        String[] nameParts = fullName.trim().split("\\s+", 2);
-        String firstName = nameParts[0];
-        String lastName = nameParts.length > 1 ? nameParts[1] : "";
-
-        Customer customer = new Customer(email, passwordEncoder.encode(password), firstName, lastName, phoneNumber, ROLE.CUSTOMER);
-
-        return customerRepository.save(customer);
+        return registerUserWithRole(fullName, email, phoneNumber, password, repeatPassword, ROLE.CUSTOMER);
     }
+
+    @Override
+    public AppUser registerUserWithRole(String fullName, String email, String phoneNumber,
+                                        String password, String repeatPassword, ROLE role) {
+        validateCommonFields(fullName, email, phoneNumber, password, repeatPassword);
+
+        String[] names = parseFullName(fullName);
+        String firstName = names[0];
+        String lastName = names[1];
+        String encodedPassword = passwordEncoder.encode(password);
+
+        return userFactory.createUser(email, encodedPassword, firstName, lastName, phoneNumber, role);
+    }
+
 
     @Override
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
     }
-
 
     @Override
     public Optional<Customer> findByEmail(String email) {
@@ -103,17 +99,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<DeliveryMan> findByEmailDM(String email) {
         return deliveryManRepository.findByEmail(email);
-    }
-
-    @Override
-    public Customer save(Customer customer) {
-        return userRepository.save(customer);
-    }
-
-    @Override
-    public DeliveryMan registerDeliveryMan(String fullName, String email, String phoneNumber,
-                                           String password, String repeatPassword) {
-        return (DeliveryMan) registerUserWithRole(fullName, email, phoneNumber, password, repeatPassword, ROLE.DELIVERY_MAN);
     }
 
     @Override
@@ -128,35 +113,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public DeliveryMan save(DeliveryMan deliveryMan) {
-        return userRepository.save(deliveryMan);
+    public Customer save(Customer customer) {
+        return customerRepository.save(customer);
     }
 
     @Override
-    public AppUser registerUserWithRole(String fullName, String email, String phoneNumber,
-                                        String password, String repeatPassword, ROLE role) {
-        validateCommonFields(fullName, email, phoneNumber, password, repeatPassword);
+    public DeliveryMan save(DeliveryMan deliveryMan) {
+        return deliveryManRepository.save(deliveryMan);
+    }
 
-        String[] names = parseFullName(fullName);
-        String firstName = names[0];
-        String lastName = names[1];
-        String encodedPassword = passwordEncoder.encode(password);
+    @Override
+    public Optional<RestaurantOwner> findRestaurantOwnerByEmail(String email) {
+        return restaurantOwnerRepository.findByEmail(email);
+    }
 
-        AppUser user;
-        switch (role) {
-            case CUSTOMER:
-                user = new Customer(email, encodedPassword, firstName, lastName, phoneNumber, ROLE.CUSTOMER);
-                break;
-            case RESTAURANT_OWNER:
-                user = new RestaurantOwner(email, encodedPassword, firstName, lastName, phoneNumber, ROLE.RESTAURANT_OWNER);
-                break;
-            case DELIVERY_MAN:
-                user = new DeliveryMan(email, encodedPassword, firstName, lastName, phoneNumber, ROLE.DELIVERY_MAN);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid role: " + role);
-        }
-
-        return userRepository.save(user);
+    @Override
+    public RestaurantOwner save(RestaurantOwner restaurantOwner) {
+        return restaurantOwnerRepository.save(restaurantOwner);
     }
 }

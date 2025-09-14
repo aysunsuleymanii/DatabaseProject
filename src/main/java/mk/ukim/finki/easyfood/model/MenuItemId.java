@@ -26,4 +26,22 @@ public class MenuItemId implements Serializable {
     public int hashCode() {
         return Objects.hash(menu, item);
     }
+
+    public Long getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Long menu) {
+        this.menu = menu;
+    }
+
+    public Long getItem() {
+        return item;
+    }
+
+    public void setItem(Long item) {
+        this.item = item;
+    }
 }
+
+

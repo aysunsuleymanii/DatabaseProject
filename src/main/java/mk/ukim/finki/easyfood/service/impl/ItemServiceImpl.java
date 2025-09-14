@@ -6,17 +6,29 @@ import mk.ukim.finki.easyfood.model.*;
 import mk.ukim.finki.easyfood.model.exceptions.ItemNotFoundException;
 import mk.ukim.finki.easyfood.repository.*;
 import mk.ukim.finki.easyfood.service.ItemService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Predicate; // This is the correct one
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
+
+    @Value("${app.upload.dir:uploads}")
+    private String uploadDir;
+
 
     private final ItemRepository itemRepository;
     private final MenuItemRepository menuItemRepository;
@@ -105,4 +117,58 @@ public class ItemServiceImpl implements ItemService {
         return this.itemRepository.findItemsByCategoryId(categoryId);
     }
 
+    @Override
+    public Item save(Item item) {
+        return itemRepository.save(item);
+    }
+
+    @Override
+    public void delete(Long id) {
+        itemRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Item> findByRestaurantMenus(Restaurant restaurant) {
+        return itemRepository.findByRestaurantMenus(restaurant.getId());
+    }
+
+    @Override
+    public boolean belongsToRestaurant(Item item, Restaurant restaurant) {
+        List<Item> restaurantItems = findByRestaurantMenus(restaurant);
+        return restaurantItems.stream().anyMatch(i -> i.getId().equals(item.getId()));
+    }
+
+    @Override
+    public String saveImage(MultipartFile imageFile) {
+        try {
+            if (imageFile.isEmpty()) {
+                return null;
+            }
+
+            Path uploadPath = Paths.get("src/main/resources/static/images/media");
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String originalFilename = imageFile.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String filename = UUID.randomUUID().toString() + extension;
+
+            Path filePath = uploadPath.resolve(filename);
+            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            return "/images/media/" + filename;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store image file", e);
+        }
+    }
+
+    @Override
+    public List<Item> searchByName(String name, Restaurant restaurant) {
+        List<Item> allRestaurantItems = findByRestaurantMenus(restaurant);
+        return allRestaurantItems.stream()
+                .filter(item -> item.getName().toLowerCase().contains(name.toLowerCase()))
+                .collect(Collectors.toList());
+    }
 }

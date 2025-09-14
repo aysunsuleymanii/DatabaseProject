@@ -23,4 +23,11 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     List<MenuItem> findByMenuId(Long menuId);
 
     void deleteByItemId(Long itemId);
+
+
+    MenuItem findByMenuAndItem(Menu menu, Item item);
+
+    void deleteByItem(Item item);
+
+    void deleteByMenu(Menu menu);
 }

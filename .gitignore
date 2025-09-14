@@ -19,6 +19,7 @@ target/
 *.iml
 *.ipr
 
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -34,3 +35,10 @@ build/
 
 # Ignore application properties
 src/main/resources/application.properties
+
+
+src/main/resources/static
+src/main/resources/application.yml
+
+.env
+

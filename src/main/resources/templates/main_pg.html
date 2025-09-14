@@ -124,13 +124,13 @@
             <button class="btn btn-warning" type="submit">Search</button>
         </form>
         <div class="d-flex align-items-center gap-2">
-            <a href="/cart" class="btn btn-outline-secondary rounded-circle p-2 position-relative">
+            <a href="/cart" class="btn btn-outline-secondary rounded-circle p-2 position-relative d-flex align-items-center justify-content-center">
                 <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart" width="22" height="22">
                 <span class="cart-badge bg-warning text-dark"
                       th:classappend="${numberOfItems == 0} ? 'd-none' : ''"
                       th:text="${numberOfItems}">0</span>
             </a>
-            <a href="/profile" class="btn btn-outline-secondary rounded-circle p-2">
+            <a href="/profile" class="btn btn-outline-secondary rounded-circle p-2 d-flex align-items-center justify-content-center">
                 <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile" width="22" height="22">
             </a>
         </div>

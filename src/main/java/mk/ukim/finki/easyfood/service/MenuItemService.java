@@ -20,5 +20,15 @@ public interface MenuItemService {
     MenuItem findById(Long id);
 
     public Optional<Restaurant> getRestaurantByItem(Item item);
+
+    MenuItem save(MenuItem menuItem);
+
+    void deleteByItem(Item item);
+
+    void deleteByMenu(Menu menu);
+
+    List<MenuItem> findByItem(Item item);
+
+    MenuItem findByMenuAndItem(Menu menu, Item item);
 }
 

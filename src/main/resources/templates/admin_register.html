@@ -49,8 +49,8 @@
                             <select class="form-select" id="role" name="role" required>
                                 <option value="">Select Role</option>
                                 <option th:each="role : ${roles}"
-                                        th:value="${role.getName()}"
-                                        th:text="${role.getName()}">
+                                        th:value="${role.name()}"
+                                        th:text="${role.name()}">
                                 </option>
                             </select>
                         </div>

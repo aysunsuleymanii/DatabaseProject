@@ -1,19 +1,15 @@
 package mk.ukim.finki.easyfood.config;
 
 import mk.ukim.finki.easyfood.service.impl.UserDetailsServiceImpl;
+import mk.ukim.finki.easyfood.service.impl.RoleBasedRedirectService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
 
 @Configuration
 @EnableWebSecurity
@@ -21,10 +17,17 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleConfiguration roleConfiguration;
+    private final RoleBasedRedirectService redirectService;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService,
+                          PasswordEncoder passwordEncoder,
+                          RoleConfiguration roleConfiguration,
+                          RoleBasedRedirectService redirectService) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.roleConfiguration = roleConfiguration;
+        this.redirectService = redirectService;
     }
 
     @Bean
@@ -39,28 +42,20 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authenticationProvider(authenticationProvider())
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/error", "/home", "/").permitAll()
-                        .requestMatchers("/DeliveryMan/accept/**", "/DeliveryMan/deliver/**","/DeliveryMan/**").hasRole("DELIVERY_MAN")
-                        .requestMatchers("/admin/register").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(this::configureAuthorizeRequests)
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/post-login", true) // Change this line
+                        .successHandler(redirectService::handleSuccessfulLogin)
                         .failureUrl("/login?error=true")
                         .permitAll()
-
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-
                         .permitAll()
                 )
                 .sessionManagement(session -> session
@@ -71,5 +66,18 @@ public class SecurityConfig {
         return http.build();
     }
 
+    private void configureAuthorizeRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authz) {
+        // Public endpoints
+        authz.requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/error", "/home", "/")
+                .permitAll();
 
+        roleConfiguration.getConfigs().forEach((role, config) -> {
+            config.getAllowedPaths().forEach(path -> {
+                authz.requestMatchers(path).hasRole(role);
+            });
+        });
+
+        // Catch all
+        authz.anyRequest().authenticated();
+    }
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "menu")
@@ -28,7 +30,8 @@ public class Menu {
     @Column(name = "name", length = 150)
     private String name;
 
-    // getters and setters
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MenuItem> menuItems = new ArrayList<>();
 
     public Restaurant getRestaurant() {
         return restaurant;
@@ -70,19 +73,13 @@ public class Menu {
         return id;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+
+    public List<MenuItem> getMenuItems() {
+        return menuItems;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public void setMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

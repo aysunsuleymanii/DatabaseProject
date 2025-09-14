@@ -12,7 +12,7 @@ public interface MenuService {
 
     List<Menu> findAll();
 
-    Optional<Menu> findById(Long id);
+    Menu findById(Long id);
 
     Menu createMenu(Menu menu);
 
@@ -21,4 +21,8 @@ public interface MenuService {
     void deleteMenu(Long id);
 
     List<Menu> findByRestaurant(Restaurant restaurant);
+
+    Menu save(Menu menu);
+
+    void delete(Long id);
 }

@@ -8,6 +8,7 @@ import mk.ukim.finki.easyfood.model.exceptions.MenuNotFoundException;
 import mk.ukim.finki.easyfood.repository.MenuItemRepository;
 import mk.ukim.finki.easyfood.service.MenuItemService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,5 +54,33 @@ public class MenuItemServiceImpl implements MenuItemService {
             return Optional.ofNullable(menuItem.get().getMenu().getRestaurant());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public MenuItem save(MenuItem menuItem) {
+        return menuItemRepository.save(menuItem);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByItem(Item item) {
+        menuItemRepository.deleteByItem(item);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByMenu(Menu menu) {
+        menuItemRepository.deleteByMenu(menu);
+    }
+
+
+    @Override
+    public List<MenuItem> findByItem(Item item) {
+        return menuItemRepository.findByItem(item);
+    }
+
+    @Override
+    public MenuItem findByMenuAndItem(Menu menu, Item item) {
+        return menuItemRepository.findByMenuAndItem(menu, item);
     }
 }

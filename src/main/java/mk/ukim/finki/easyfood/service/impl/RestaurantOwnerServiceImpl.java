@@ -11,9 +11,35 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
 
+    private final RestaurantOwnerRepository restaurantOwnerRepository;
 
+    public RestaurantOwnerServiceImpl(RestaurantOwnerRepository restaurantOwnerRepository) {
+        this.restaurantOwnerRepository = restaurantOwnerRepository;
+    }
+
+
+    @Override
+    public RestaurantOwner findByEmail(String email) {
+        return restaurantOwnerRepository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public RestaurantOwner findById(Long id) {
+        return restaurantOwnerRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<RestaurantOwner> findAll() {
+        return restaurantOwnerRepository.findAll();
+    }
+
+    @Override
+    public void delete(Long id) {
+        restaurantOwnerRepository.deleteById(id);
+    }
 }

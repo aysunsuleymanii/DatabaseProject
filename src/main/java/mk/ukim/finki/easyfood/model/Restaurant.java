@@ -26,6 +26,16 @@ public class Restaurant {
     @Column(name = "name", nullable = false, length = 150)
     private String name;
 
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private Menu menu;
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenus(Menu m) {
+        this.menu = m;
+    }
 
 
     @Column(name = "website_url", length = 255)

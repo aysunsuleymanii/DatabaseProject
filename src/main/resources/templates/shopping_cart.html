@@ -34,7 +34,7 @@
         <div th:each="cartItem : ${cartItems}" class="card shadow-sm border-0 w-100 mb-3">
             <div class="row g-0">
                 <div class="col-md-3 col-4">
-                    <img th:src="@{'/media/' + ${cartItem.item.imageUrl}}"
+                    <img th:src="@{'/images/media/' + ${cartItem.item.imageUrl}}"
                          class="w-100 object-fit-cover rounded-start"
                          th:alt="${cartItem.item.name}"
                          style="height:150px;">
